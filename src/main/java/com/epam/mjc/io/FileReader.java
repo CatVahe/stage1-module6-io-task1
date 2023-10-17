@@ -18,7 +18,7 @@ public class FileReader {
             while ((lines = Objects.requireNonNull(bufferedReader).readLine()) != null) {
                 String[] strings = lines.split(" ");
                 data.add(strings[1]);
-                i++;
+
             }
             bufferedReader.close();
         }catch (IOException e){

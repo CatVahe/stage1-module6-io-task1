@@ -1,54 +1,32 @@
 package com.epam.mjc.io;
 
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 
 public class FileReader {
 
-
-    public Profile getDataFromFile(File file) {
-        String name = "";
-        int age = 0;
-        String email = "";
-        long phone = 0;
-
-        StringBuilder stringBuilder = new StringBuilder();
-
+    public Profile getDataFromFile(File file){
+        List<String> data = new ArrayList<>();
+        String lines;
+        int i=0;
         try {
-            FileInputStream fileInputStream = new FileInputStream(file);
-            int ch;
-            while ((ch = fileInputStream.read()) != -1){
-                //System.out.print((char)ch);
-                if((char)ch != '\r'){
-                    stringBuilder.append((char)ch);
-                }
-                else {
-                    String[] strings = stringBuilder.toString().split(": ");
-
-                    if(strings[0].equalsIgnoreCase("name"))
-                        name = strings[1];
-                    else if(strings[0].equalsIgnoreCase("\nage"))
-                        age = Integer.parseInt(strings[1]);
-                    else if(strings[0].equalsIgnoreCase("\nemail"))
-                        email = strings[1];
-                    else if(strings[0].equalsIgnoreCase("\nphone"))
-                        phone = Long.parseLong(strings[1]);
-
-                    stringBuilder = new StringBuilder();
-
-                }
+            BufferedReader bufferedReader = new BufferedReader(new java.io.FileReader(file));
+            while ((lines = Objects.requireNonNull(bufferedReader).readLine()) != null) {
+                String[] strings = lines.split(" ");
+                data.add(strings[1]);
+                i++;
             }
-            fileInputStream.close();
-
-        } catch (FileNotFoundException e) {
-            System.out.println("file not exist");
-        } catch (IOException e) {
-            System.out.println("IO");
+            bufferedReader.close();
+        }catch (IOException e){
+            e.printStackTrace();
         }
 
-        return new Profile(name, age, email, phone);
+        return new Profile(data.get(0),Integer.parseInt(data.get(1)),data.get(2),Long.parseLong(data.get(3)));
     }
 }
